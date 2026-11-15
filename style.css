@@ -540,6 +540,10 @@ footer {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    .hero-desc {
+        display: none;
+    }
+
     .navbar {
         width: 92%;
         padding: 0.6rem 1.2rem;
