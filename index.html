@@ -1,0 +1,2090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chirag Buliya — Product · Strategy · Execution</title>
+  <meta name="description" content="Portfolio of Chirag Buliya: Product Management, Operations, Technology & Design. B.Tech ICT at PDEU.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Onest:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Lenis Import Map -->
+  <script type="importmap">
+  {
+    "imports": {
+      "lenis": "https://cdn.jsdelivr.net/npm/lenis@1.3.19/dist/lenis.mjs"
+    }
+  }
+  </script>
+
+  <style>
+    /* CSS Reset */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    img, video {
+      display: block;
+      max-width: 100%;
+    }
+    ul, ol {
+      list-style: none;
+    }
+    button, a, input {
+      font-family: inherit;
+      color: inherit;
+      border: none;
+      background: none;
+      outline: none;
+      text-decoration: none;
+    }
+    button {
+      cursor: pointer;
+    }
+
+    /* Shared Tokens */
+    :root {
+      --background: #08080a;
+      --foreground: #f3f1ea;
+      --surface: #111114;
+      --surface-2: #17171b;
+      --muted: #807f78;
+      --line: rgba(243, 241, 234, 0.1);
+      --line-strong: rgba(243, 241, 234, 0.22);
+      --accent: #ff3b1d;
+      --accent-2: #ff6a3d;
+
+      --font-display: "Anton", sans-serif;
+      --font-sans: "Onest", sans-serif;
+
+      --gutter: 2.5rem;
+      --section: 9rem;
+
+      --text-hero: 28rem;
+      --lh-hero: 0.78;
+      --text-mega: 13rem;
+      --lh-mega: 0.86;
+      --text-display: 7.5rem;
+      --lh-display: 0.9;
+      --text-h1: 5rem;
+      --lh-h1: 0.95;
+      --text-h2: 3.25rem;
+      --lh-h2: 1;
+      --text-h3: 1.75rem;
+      --lh-h3: 1.15;
+      --text-lead: 1.375rem;
+      --lh-lead: 1.45;
+      --text-body: 1.0625rem;
+      --lh-body: 1.6;
+      --text-eyebrow: 0.8125rem;
+      --lh-eyebrow: 1.2;
+    }
+
+    /* Rem-based adaptive grid */
+    html {
+      font-size: 16px;
+      background: #08080a;
+      scroll-behavior: auto;
+    }
+    @media (max-width: 1920px) { html { font-size: 0.833333vw; } }
+    @media (max-width: 1440px) { html { font-size: 1.111111vw; } }
+    @media (max-width: 1024px) { html { font-size: 1.5625vw;   } }
+    @media (max-width: 640px)  {
+      html { font-size: 4.444444vw; }
+      :root { --gutter: 16px; }
+    }
+
+    body {
+      background: #08080a;
+      color: #f3f1ea;
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      overflow-x: hidden;
+      width: 100%;
+      position: relative;
+    }
+
+    ::selection {
+      background: #ff3b1d;
+      color: #08080a;
+    }
+
+    /* Lenis minimal recommended styles */
+    html.lenis, html.lenis body {
+      height: auto;
+    }
+    .lenis.lenis-smooth {
+      scroll-behavior: auto !important;
+    }
+    .lenis.lenis-smooth [data-lenis-prevent] {
+      overscroll-behavior: contain;
+    }
+    .lenis.lenis-stopped {
+      overflow: hidden;
+    }
+    .lenis.lenis-smooth iframe {
+      pointer-events: none;
+    }
+
+    main {
+      position: relative;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    /* Reusable Eyebrow */
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: var(--text-eyebrow);
+      line-height: var(--lh-eyebrow);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--muted);
+    }
+    .eyebrow-dot {
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 9999px;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    /* 1) Preloader */
+    #preloader {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      padding: var(--gutter);
+      background: var(--background);
+      transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: transform;
+    }
+    @media (min-width: 640px) {
+      #preloader {
+        flex-direction: row;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+    }
+    .preloader-bg {
+      position: absolute;
+      inset: 0;
+      z-index: -10;
+      background: var(--background);
+    }
+    .preloader-brand {
+      font-family: var(--font-display);
+      font-size: var(--text-h3);
+      text-transform: uppercase;
+      line-height: 1;
+      letter-spacing: -0.01em;
+      color: var(--foreground);
+      transition: opacity 300ms ease;
+    }
+    .preloader-counter {
+      font-family: var(--font-display);
+      font-size: var(--text-display);
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+      color: var(--foreground);
+      transition: opacity 300ms ease;
+    }
+    .preloader-counter span {
+      color: var(--accent);
+    }
+
+    /* 2) SiteNav (fixed top) */
+    .site-header {
+      position: fixed;
+      inset-inline: 0;
+      top: 0;
+      z-index: 50;
+      pointer-events: none;
+    }
+    .site-nav {
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem var(--gutter);
+    }
+    .site-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .site-monogram {
+      display: grid;
+      place-items: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 9999px;
+      border: 1px solid var(--line-strong);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--foreground);
+      font-size: var(--text-body);
+    }
+    .site-brand-name {
+      display: none;
+      font-size: var(--text-eyebrow);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--muted);
+    }
+    @media (min-width: 640px) {
+      .site-brand-name {
+        display: block;
+      }
+    }
+
+    .desktop-nav {
+      display: none;
+      align-items: center;
+      gap: 2.5rem;
+    }
+    @media (min-width: 768px) {
+      .desktop-nav {
+        display: flex;
+      }
+    }
+    .desktop-nav-link {
+      font-size: var(--text-eyebrow);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      position: relative;
+      transition: color 300ms ease;
+    }
+    .desktop-nav-link::after {
+      content: "";
+      position: absolute;
+      bottom: -0.25rem;
+      left: 0;
+      height: 1px;
+      background: var(--accent);
+      width: 0;
+      transition: width 300ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .desktop-nav-link:hover {
+      color: var(--foreground);
+    }
+    .desktop-nav-link:hover::after {
+      width: 100%;
+    }
+
+    /* Burger Menu (<md) */
+    .burger-btn {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 0.375rem;
+      width: 2.5rem;
+      height: 2.5rem;
+      z-index: 60;
+      cursor: pointer;
+    }
+    @media (min-width: 768px) {
+      .burger-btn {
+        display: none;
+      }
+    }
+    .burger-bar {
+      width: 1.5rem;
+      height: 0.125rem;
+      background: var(--foreground);
+      transition: transform 300ms ease, opacity 300ms ease;
+    }
+    .burger-btn.open .burger-bar:nth-child(1) {
+      transform: translateY(0.5rem) rotate(45deg);
+    }
+    .burger-btn.open .burger-bar:nth-child(2) {
+      opacity: 0;
+    }
+    .burger-btn.open .burger-bar:nth-child(3) {
+      transform: translateY(-0.5rem) rotate(-45deg);
+    }
+
+    /* Mobile Menu Panel */
+    .mobile-menu {
+      position: fixed;
+      inset: 0;
+      z-index: 45;
+      background: var(--background);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding-inline: var(--gutter);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 450ms ease-out;
+    }
+    .mobile-menu.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .mobile-nav-list {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+    }
+    .mobile-nav-item {
+      overflow: hidden;
+    }
+    .mobile-nav-link {
+      font-family: var(--font-display);
+      font-size: var(--text-h2);
+      text-transform: uppercase;
+      line-height: 1;
+      letter-spacing: -0.01em;
+      color: var(--foreground);
+      display: block;
+      transform: translateY(48px);
+      opacity: 0;
+      transition: transform 420ms ease-out, opacity 420ms ease-out;
+    }
+    .mobile-menu.open .mobile-nav-link {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    .mobile-menu.open .mobile-nav-item:nth-child(1) .mobile-nav-link { transition-delay: 120ms; }
+    .mobile-menu.open .mobile-nav-item:nth-child(2) .mobile-nav-link { transition-delay: 170ms; }
+    .mobile-menu.open .mobile-nav-item:nth-child(3) .mobile-nav-link { transition-delay: 220ms; }
+    .mobile-menu.open .mobile-nav-item:nth-child(4) .mobile-nav-link { transition-delay: 270ms; }
+    .mobile-menu.open .mobile-nav-item:nth-child(5) .mobile-nav-link { transition-delay: 320ms; }
+
+    /* 3) Hero */
+    .hero-section {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-height: 100svh;
+      overflow: hidden;
+      justify-content: space-between;
+    }
+    .hero-top-row {
+      position: relative;
+      z-index: 30;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      padding: 7rem var(--gutter) 0;
+    }
+    @media (min-width: 640px) {
+      .hero-top-row {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-between;
+        padding: 8rem var(--gutter) 0;
+      }
+    }
+    .hero-roles {
+      font-family: var(--font-display);
+      text-transform: uppercase;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      color: var(--foreground);
+      font-size: var(--text-h3);
+    }
+    @media (min-width: 640px) {
+      .hero-roles {
+        font-size: var(--text-h2);
+      }
+    }
+    .role-line-wrap {
+      display: block;
+      overflow: hidden;
+    }
+    .role-line {
+      display: block;
+      transform: translateY(110%);
+      opacity: 0;
+      transition: transform 760ms cubic-bezier(0.16, 1, 0.3, 1), opacity 760ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .role-line.revealed {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .hero-desc {
+      max-width: 26rem;
+      font-size: var(--text-body);
+      line-height: var(--lh-body);
+      color: var(--muted);
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 520ms cubic-bezier(0.16, 1, 0.3, 1), transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @media (min-width: 640px) {
+      .hero-desc {
+        text-align: right;
+      }
+    }
+    .hero-desc.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .hero-portrait-col {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 86vh;
+      width: 80vw;
+      z-index: 20;
+      pointer-events: none;
+    }
+    @media (min-width: 640px) {
+      .hero-portrait-col {
+        width: 48vw;
+      }
+    }
+    @media (min-width: 1024px) {
+      .hero-portrait-col {
+        width: 36vw;
+      }
+    }
+
+    .hero-gradient-base {
+      position: absolute;
+      inset-inline: 0;
+      bottom: 0;
+      z-index: 20;
+      height: 26vh;
+      background: linear-gradient(to bottom, transparent, #08080a);
+      pointer-events: none;
+    }
+
+    .hero-giant-name {
+      position: absolute;
+      inset-inline: 0;
+      bottom: 0;
+      transform: translateY(6%);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: var(--font-display);
+      text-transform: uppercase;
+      line-height: var(--lh-hero);
+      letter-spacing: -0.01em;
+      color: var(--accent);
+      font-size: var(--text-mega);
+      pointer-events: none;
+      user-select: none;
+    }
+    @media (min-width: 640px) {
+      .hero-giant-name {
+        font-size: var(--text-hero);
+      }
+    }
+    .hero-name-line {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .letter-mask {
+      display: inline-block;
+      overflow: hidden;
+      vertical-align: top;
+    }
+    .letter-inner {
+      display: inline-block;
+      transform: translateY(100%);
+      opacity: 0;
+      transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1), opacity 900ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .letter-inner.revealed {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .hero-scroll-cue {
+      position: absolute;
+      bottom: 2rem;
+      left: var(--gutter);
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: var(--text-eyebrow);
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--muted);
+      opacity: 0;
+      transition: opacity 500ms ease-out;
+    }
+    .hero-scroll-cue.revealed {
+      opacity: 1;
+    }
+    .hero-scroll-line {
+      width: 2.5rem;
+      height: 1px;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    /* LiquidImage Component */
+    .liquid-figure {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(130% 130% at 30% 15%, var(--surface-2), var(--background));
+    }
+    .liquid-figure.bare {
+      background: transparent;
+    }
+    .liquid-media {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+    .hero-portrait-col .liquid-media {
+      object-position: center 30%;
+    }
+    .liquid-veil {
+      position: absolute;
+      inset: 0;
+      background: #08080a;
+      mix-blend-mode: color;
+      opacity: 0.88;
+      pointer-events: none;
+      transition: opacity 380ms ease-out;
+    }
+    .liquid-figure:hover .liquid-veil {
+      opacity: 0;
+    }
+    .liquid-glow {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 30%, color-mix(in srgb, var(--accent) 35%, transparent) 50%, transparent 70%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 380ms ease-out;
+    }
+    .liquid-figure:hover .liquid-glow {
+      opacity: 1;
+    }
+    .liquid-vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(120% 120% at 50% 120%, color-mix(in srgb, #08080a 70%, transparent), transparent 60%);
+      pointer-events: none;
+    }
+
+    /* 4) Marquee */
+    .marquee-section {
+      overflow: hidden;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding-top: 2rem;
+      padding-bottom: 2rem;
+    }
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      flex-wrap: nowrap;
+      animation: marquee 22s linear infinite;
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    .marquee-group {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .marquee-word {
+      font-family: var(--font-display);
+      font-size: var(--text-h2);
+      line-height: var(--lh-h2);
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+    }
+    .marquee-dot {
+      margin-inline: 2rem;
+      width: 0.625rem;
+      height: 0.625rem;
+      border-radius: 9999px;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    /* Line-by-line heading reveal */
+    .heading-line {
+      display: block;
+      overflow: hidden;
+    }
+    .heading-line-inner {
+      display: inline-block;
+      transform: translateY(110%);
+      opacity: 0;
+      transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1), opacity 900ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .heading-reveal.in-view .heading-line:nth-child(1) .heading-line-inner {
+      transform: translateY(0);
+      opacity: 1;
+      transition-delay: 0ms;
+    }
+    .heading-reveal.in-view .heading-line:nth-child(2) .heading-line-inner {
+      transform: translateY(0);
+      opacity: 1;
+      transition-delay: 90ms;
+    }
+    .heading-reveal.in-view .heading-line:nth-child(3) .heading-line-inner {
+      transform: translateY(0);
+      opacity: 1;
+      transition-delay: 180ms;
+    }
+
+    .fade-slide-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 520ms cubic-bezier(0.16, 1, 0.3, 1), transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .fade-slide-up.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 5) Story */
+    .story-section {
+      padding: var(--section) var(--gutter);
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+    @media (min-width: 1024px) {
+      .story-section {
+        grid-template-columns: repeat(12, 1fr);
+        gap: var(--gutter);
+      }
+      .story-left {
+        grid-column: span 6;
+      }
+      .story-right {
+        grid-column: span 6;
+        padding-top: 0.5rem;
+      }
+    }
+    .story-heading {
+      margin-top: 1.5rem;
+      max-width: 16ch;
+      font-family: var(--font-display);
+      text-transform: uppercase;
+      line-height: var(--lh-h1);
+      letter-spacing: -0.01em;
+      font-size: var(--text-h2);
+    }
+    @media (min-width: 640px) {
+      .story-heading {
+        font-size: var(--text-h1);
+      }
+    }
+    .story-lead {
+      margin-top: 2rem;
+      max-width: 46ch;
+      font-size: var(--text-lead);
+      line-height: var(--lh-lead);
+      color: var(--muted);
+    }
+    .story-principles {
+      list-style: none;
+    }
+    .story-principle {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      column-gap: 1.5rem;
+      border-top: 1px solid var(--line);
+      padding: 2rem 0;
+      opacity: 0;
+      transform: translateY(36px);
+      transition: opacity 560ms cubic-bezier(0.16, 1, 0.3, 1), transform 560ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .story-principle:last-child {
+      border-bottom: 1px solid var(--line);
+    }
+    .story-principle.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .story-principle:nth-child(1).in-view { transition-delay: 0ms; }
+    .story-principle:nth-child(2).in-view { transition-delay: 90ms; }
+    .story-principle:nth-child(3).in-view { transition-delay: 180ms; }
+    .story-principle:nth-child(4).in-view { transition-delay: 270ms; }
+    .principle-num {
+      font-family: var(--font-sans);
+      font-size: var(--text-h3);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      color: var(--accent);
+    }
+    .principle-title {
+      font-family: var(--font-sans);
+      font-size: var(--text-h3);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--foreground);
+    }
+    .principle-text {
+      margin-top: 0.75rem;
+      max-width: 44ch;
+      font-size: var(--text-body);
+      line-height: var(--lh-body);
+      color: var(--muted);
+    }
+
+    /* 6) Ventures */
+    .ventures-section {
+      padding: var(--section) var(--gutter);
+    }
+    .ventures-header {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    @media (min-width: 640px) {
+      .ventures-header {
+        flex-direction: row;
+        align-items: flex-end;
+        justify-content: space-between;
+      }
+    }
+    .ventures-heading {
+      margin-top: 1.5rem;
+      max-width: 14ch;
+      font-family: var(--font-display);
+      text-transform: uppercase;
+      line-height: var(--lh-h1);
+      letter-spacing: -0.01em;
+      font-size: var(--text-h2);
+    }
+    @media (min-width: 640px) {
+      .ventures-heading {
+        font-size: var(--text-h1);
+      }
+    }
+    .ventures-count {
+      font-size: var(--text-eyebrow);
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--muted);
+    }
+    .ventures-list {
+      margin-top: 4rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      row-gap: 4rem;
+      list-style: none;
+    }
+    @media (min-width: 768px) {
+      .ventures-list {
+        grid-template-columns: repeat(2, 1fr);
+        column-gap: var(--gutter);
+      }
+      .ventures-item:nth-child(even) {
+        margin-top: 6rem;
+      }
+    }
+    .ventures-item {
+      opacity: 0;
+      transform: translateY(60px);
+      transition: opacity 620ms cubic-bezier(0.16, 1, 0.3, 1), transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .ventures-item.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @media (min-width: 768px) {
+      .ventures-item:nth-child(even).in-view {
+        transition-delay: 120ms;
+      }
+    }
+    .venture-figure {
+      aspect-ratio: 16 / 11;
+      width: 100%;
+      border-radius: 0.125rem;
+    }
+    .venture-row {
+      margin-top: 1.5rem;
+      border-top: 1px solid var(--line);
+      padding-top: 1.25rem;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .venture-name {
+      font-family: var(--font-sans);
+      font-size: var(--text-h3);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--foreground);
+      transition: color 340ms ease-out;
+    }
+    .ventures-item:hover .venture-name {
+      color: var(--accent);
+    }
+    .venture-blurb {
+      margin-top: 0.5rem;
+      max-width: 42ch;
+      font-size: var(--text-body);
+      line-height: var(--lh-body);
+      color: var(--muted);
+    }
+    .venture-meta-right {
+      flex-shrink: 0;
+      text-align: right;
+    }
+    .venture-year {
+      font-size: var(--text-eyebrow);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+    }
+    .venture-outcome {
+      margin-top: 0.5rem;
+      font-size: var(--text-eyebrow);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--accent);
+    }
+    .venture-category {
+      margin-top: 0.75rem;
+      font-size: var(--text-eyebrow);
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--muted);
+    }
+
+    /* 7) Impact */
+    .impact-section {
+      padding: var(--section) var(--gutter);
+    }
+    .impact-heading {
+      margin-top: 1.5rem;
+      font-family: var(--font-display);
+      text-transform: uppercase;
+      line-height: var(--lh-h2);
+      letter-spacing: -0.01em;
+      font-size: var(--text-h2);
+    }
+    .impact-list {
+      margin-top: 4rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      border-top: 1px solid var(--line);
+    }
+    @media (min-width: 640px) {
+      .impact-list {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .impact-cell:nth-child(2n) {
+        border-left: 1px solid var(--line);
+        padding-left: 2rem;
+      }
+    }
+    @media (min-width: 1024px) {
+      .impact-list {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      .impact-cell {
+        padding: 3rem 0;
+      }
+      .impact-cell:nth-child(2n) {
+        border-left: none;
+        padding-left: 0;
+      }
+      .impact-cell:not(:first-child) {
+        border-left: 1px solid var(--line);
+        padding-left: 2rem;
+      }
+    }
+    .impact-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      border-bottom: 1px solid var(--line);
+      padding: 2.5rem 0;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 560ms cubic-bezier(0.16, 1, 0.3, 1), transform 560ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .impact-cell.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .impact-cell:nth-child(1).in-view { transition-delay: 0ms; }
+    .impact-cell:nth-child(2).in-view { transition-delay: 110ms; }
+    .impact-cell:nth-child(3).in-view { transition-delay: 220ms; }
+    .impact-cell:nth-child(4).in-view { transition-delay: 330ms; }
+    .impact-figure {
+      font-family: var(--font-display);
+      font-size: var(--text-display);
+      line-height: var(--lh-display);
+      letter-spacing: -0.01em;
+      color: var(--foreground);
+      transition: color 340ms ease-out;
+    }
+    .impact-cell:hover .impact-figure {
+      color: var(--accent);
+    }
+    .impact-label {
+      max-width: 20ch;
+      font-size: var(--text-body);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      line-height: var(--lh-body);
+    }
+
+    /* 8) Voices */
+    .voices-section {
+      padding: var(--section) var(--gutter);
+    }
+    .voices-heading {
+      margin-top: 1.5rem;
+      font-family: var(--font-display);
+      text-transform: uppercase;
+      line-height: var(--lh-h2);
+      letter-spacing: -0.01em;
+      font-size: var(--text-h2);
+    }
+    .voices-body-grid {
+      margin-top: 4rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+    @media (min-width: 1024px) {
+      .voices-body-grid {
+        grid-template-columns: repeat(12, 1fr);
+        gap: var(--gutter);
+      }
+      .voices-selector {
+        grid-column: span 5;
+      }
+      .voices-featured {
+        grid-column: span 7;
+      }
+    }
+    .voice-btn {
+      display: flex;
+      align-items: baseline;
+      gap: 1.25rem;
+      border: none;
+      border-top: 1px solid var(--line);
+      padding: 1.75rem 0;
+      text-align: left;
+      width: 100%;
+      background: transparent;
+      cursor: pointer;
+      color: inherit;
+      font-family: inherit;
+    }
+    .voice-btn:last-child {
+      border-bottom: 1px solid var(--line);
+    }
+    .voice-num {
+      font-size: var(--text-eyebrow);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      transition: color 300ms ease;
+      flex-shrink: 0;
+    }
+    .voice-btn.active .voice-num {
+      color: var(--accent);
+    }
+    .voice-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .voice-name {
+      font-family: var(--font-sans);
+      font-size: var(--text-h3);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--muted);
+      transition: color 300ms ease;
+    }
+    .voice-btn.active .voice-name {
+      color: var(--foreground);
+    }
+    .voice-role {
+      margin-top: 0.25rem;
+      font-size: var(--text-eyebrow);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+    }
+    .voice-line {
+      margin-left: auto;
+      height: 1px;
+      background: var(--accent);
+      width: 0;
+      transition: width 300ms ease;
+      flex-shrink: 0;
+      align-self: center;
+    }
+    .voice-btn.active .voice-line {
+      width: 2.5rem;
+    }
+
+    .voices-featured-inner {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+    @media (min-width: 640px) {
+      .voices-featured-inner {
+        grid-template-columns: 1fr auto;
+        align-items: flex-start;
+      }
+    }
+    .voices-quote-wrap {
+      order: 2;
+    }
+    @media (min-width: 640px) {
+      .voices-quote-wrap {
+        order: 1;
+      }
+    }
+    .voices-quote-text {
+      max-width: 30ch;
+      font-family: var(--font-sans);
+      font-size: var(--text-h3);
+      font-weight: 500;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+      color: var(--foreground);
+    }
+    .voices-quote-footer {
+      margin-top: 2rem;
+      font-size: var(--text-eyebrow);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+    }
+    .voices-portrait-col {
+      order: 1;
+      width: 100%;
+    }
+    @media (min-width: 640px) {
+      .voices-portrait-col {
+        order: 2;
+        width: 16rem;
+        flex-shrink: 0;
+      }
+    }
+    .voice-portrait-wrap {
+      opacity: 0;
+      transform: scale(1.06);
+      transition: opacity 640ms cubic-bezier(0.16, 1, 0.3, 1), transform 640ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .voice-portrait-wrap.in-view {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .voice-portrait-figure {
+      aspect-ratio: 4 / 5;
+      width: 100%;
+      border-radius: 0.125rem;
+    }
+
+    .word-mask {
+      display: inline-block;
+      overflow: hidden;
+      vertical-align: top;
+    }
+    .word-inner {
+      display: inline-block;
+      transform: translateY(18px);
+      opacity: 0;
+      transition: transform 520ms cubic-bezier(0.165, 0.84, 0.44, 1), opacity 520ms cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+    .quote-revealed .word-inner {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* 9) ContactFooter */
+    .contact-footer {
+      padding-top: var(--section);
+      padding-inline: var(--gutter);
+    }
+    .contact-heading {
+      margin-top: 1.5rem;
+      max-width: 18ch;
+      font-family: var(--font-display);
+      text-transform: uppercase;
+      line-height: var(--lh-h1);
+      letter-spacing: -0.01em;
+      font-size: var(--text-h1);
+    }
+    @media (min-width: 640px) {
+      .contact-heading {
+        font-size: var(--text-display);
+        line-height: var(--lh-display);
+      }
+    }
+    .contact-lead {
+      margin-top: 2rem;
+      max-width: 44ch;
+      font-size: var(--text-lead);
+      line-height: var(--lh-lead);
+      color: var(--muted);
+    }
+    .contact-email {
+      margin-top: 3rem;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      font-family: var(--font-sans);
+      font-size: var(--text-h3);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      word-break: break-all;
+      color: var(--foreground);
+      transition: transform 340ms ease-out, color 340ms ease-out;
+    }
+    @media (min-width: 640px) {
+      .contact-email {
+        font-size: var(--text-h1);
+        gap: 1rem;
+      }
+    }
+    .contact-email:hover {
+      transform: translateX(14px);
+      color: var(--accent);
+    }
+    .email-arrow {
+      color: var(--accent);
+      font-weight: 400;
+      margin-left: 0.25rem;
+    }
+
+    .footer-bar {
+      margin-top: var(--section);
+      border-top: 1px solid var(--line);
+      padding: 3rem 0;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+    @media (min-width: 1024px) {
+      .footer-bar {
+        grid-template-columns: repeat(12, 1fr);
+      }
+      .footer-left {
+        grid-column: span 6;
+      }
+      .footer-middle {
+        grid-column: span 3;
+      }
+      .footer-right {
+        grid-column: span 3;
+        text-align: right;
+      }
+    }
+    .footer-signature {
+      font-family: var(--font-display);
+      font-size: var(--text-h2);
+      text-transform: uppercase;
+      line-height: 1;
+      letter-spacing: -0.01em;
+      color: var(--foreground);
+    }
+    .footer-tagline {
+      margin-top: 1rem;
+      font-size: var(--text-eyebrow);
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--muted);
+    }
+    .social-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      list-style: none;
+    }
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      font-size: var(--text-body);
+      color: var(--muted);
+      transition: color 300ms ease;
+    }
+    .social-rule {
+      height: 1px;
+      background: var(--accent);
+      width: 0;
+      transition: width 300ms ease, margin-right 300ms ease;
+      margin-right: 0;
+      display: inline-block;
+    }
+    .social-link:hover {
+      color: var(--foreground);
+    }
+    .social-link:hover .social-rule {
+      width: 1.5rem;
+      margin-right: 0.5rem;
+    }
+    .footer-copyright {
+      font-size: var(--text-eyebrow);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+    }
+
+    /* Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+      #preloader {
+        display: none !important;
+      }
+      .marquee-track {
+        animation: none !important;
+      }
+      .role-line,
+      .letter-inner,
+      .hero-desc,
+      .hero-scroll-cue,
+      .heading-line-inner,
+      .fade-slide-up,
+      .story-principle,
+      .ventures-item,
+      .impact-cell,
+      .voice-portrait-wrap,
+      .word-inner,
+      .mobile-nav-link {
+        transition: none !important;
+        transform: none !important;
+        opacity: 1 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1) Preloader -->
+  <aside id="preloader" aria-label="Loading site">
+    <div class="preloader-bg"></div>
+    <div class="preloader-brand">Chirag Buliya</div>
+    <div class="preloader-counter"><span id="preloader-counter-val">0</span><span>%</span></div>
+  </aside>
+
+  <!-- 2) SiteNav (fixed top) -->
+  <header class="site-header">
+    <nav class="site-nav" aria-label="Main Navigation">
+      <a href="#top" class="site-logo" aria-label="Chirag Buliya Home">
+        <div class="site-monogram">CB</div>
+        <span class="site-brand-name">Chirag Buliya</span>
+      </a>
+
+      <ul class="desktop-nav">
+        <li><a href="#story" class="desktop-nav-link">About</a></li>
+        <li><a href="#ventures" class="desktop-nav-link">Work</a></li>
+        <li><a href="#impact" class="desktop-nav-link">Impact</a></li>
+        <li><a href="#voices" class="desktop-nav-link">Leadership</a></li>
+        <li><a href="#contact" class="desktop-nav-link">Contact</a></li>
+      </ul>
+
+      <button class="burger-btn" aria-label="Toggle Navigation" aria-expanded="false">
+        <span class="burger-bar"></span>
+        <span class="burger-bar"></span>
+        <span class="burger-bar"></span>
+      </button>
+    </nav>
+  </header>
+
+  <!-- Mobile Menu Panel -->
+  <div class="mobile-menu" aria-hidden="true">
+    <ul class="mobile-nav-list">
+      <li class="mobile-nav-item"><a href="#story" class="mobile-nav-link">About</a></li>
+      <li class="mobile-nav-item"><a href="#ventures" class="mobile-nav-link">Work</a></li>
+      <li class="mobile-nav-item"><a href="#impact" class="mobile-nav-link">Impact</a></li>
+      <li class="mobile-nav-item"><a href="#voices" class="mobile-nav-link">Leadership</a></li>
+      <li class="mobile-nav-item"><a href="#contact" class="mobile-nav-link">Contact</a></li>
+    </ul>
+  </div>
+
+  <main>
+    <!-- 3) Hero -->
+    <section id="top" class="hero-section">
+      <!-- Top row (z-index: 30) -->
+      <div class="hero-top-row">
+        <!-- Left: role words -->
+        <h2 class="hero-roles">
+          <span class="role-line-wrap"><span class="role-line">Product</span></span>
+          <span class="role-line-wrap"><span class="role-line">Operator</span></span>
+          <span class="role-line-wrap"><span class="role-line">Strategist</span></span>
+          <span class="role-line-wrap"><span class="role-line">Builder</span></span>
+        </h2>
+
+        <!-- Right: description -->
+        <p class="hero-desc">
+          Building at the intersection of technology, product strategy, and design. From founder-office operations to launching agile legaltech MVPs.
+        </p>
+      </div>
+
+      <!-- Portrait column (z-index: 20) -->
+      <div class="hero-portrait-col">
+        <figure class="liquid-figure bare" data-filter-id="hero-liquid" data-max-scale="30" role="img" style="pointer-events: auto;">
+          <svg width="0" height="0" style="position: absolute;">
+            <filter id="hero-liquid">
+              <feTurbulence id="hero-liquid-turb" type="fractalNoise" baseFrequency="0.009" numOctaves="2" result="noise"></feTurbulence>
+              <feDisplacementMap id="hero-liquid-disp" in="SourceGraphic" in2="noise" scale="1"></feDisplacementMap>
+            </filter>
+          </svg>
+          <img class="liquid-media" src="assets/chirag-hero.jpg" alt="Chirag Buliya" style="filter: url(#hero-liquid);">
+        </figure>
+      </div>
+
+      <!-- Gradient base (z-index: 20) -->
+      <div class="hero-gradient-base"></div>
+
+      <!-- Giant name (z-index: 10) -->
+      <h1 class="hero-giant-name" aria-label="Chirag Buliya">
+        <span class="hero-name-line hero-name-l1">
+          <span class="letter-mask"><span class="letter-inner">C</span></span><span class="letter-mask"><span class="letter-inner">h</span></span><span class="letter-mask"><span class="letter-inner">i</span></span><span class="letter-mask"><span class="letter-inner">r</span></span><span class="letter-mask"><span class="letter-inner">a</span></span><span class="letter-mask"><span class="letter-inner">g</span></span>
+        </span>
+        <span class="hero-name-line hero-name-l2">
+          <span class="letter-mask"><span class="letter-inner">B</span></span><span class="letter-mask"><span class="letter-inner">u</span></span><span class="letter-mask"><span class="letter-inner">l</span></span><span class="letter-mask"><span class="letter-inner">i</span></span><span class="letter-mask"><span class="letter-inner">y</span></span><span class="letter-mask"><span class="letter-inner">a</span></span>
+        </span>
+      </h1>
+
+      <!-- Scroll cue (z-index: 30) -->
+      <div class="hero-scroll-cue">
+        <span class="hero-scroll-line"></span>
+        <span>Scroll to enter</span>
+      </div>
+    </section>
+
+    <!-- 4) Marquee -->
+    <section class="marquee-section" aria-label="Operating principles">
+      <div class="marquee-track">
+        <div class="marquee-group">
+          <span class="marquee-word">Product Strategy</span>
+          <span class="marquee-dot"></span>
+          <span class="marquee-word">Customer Discovery</span>
+          <span class="marquee-dot"></span>
+          <span class="marquee-word">Agile Execution</span>
+          <span class="marquee-dot"></span>
+          <span class="marquee-word">Rapid Prototyping</span>
+          <span class="marquee-dot"></span>
+          <span class="marquee-word">Data-Driven Impact</span>
+          <span class="marquee-dot"></span>
+        </div>
+        <div class="marquee-group" aria-hidden="true">
+          <span class="marquee-word">Product Strategy</span>
+          <span class="marquee-dot"></span>
+          <span class="marquee-word">Customer Discovery</span>
+          <span class="marquee-dot"></span>
+          <span class="marquee-word">Agile Execution</span>
+          <span class="marquee-dot"></span>
+          <span class="marquee-word">Rapid Prototyping</span>
+          <span class="marquee-dot"></span>
+          <span class="marquee-word">Data-Driven Impact</span>
+          <span class="marquee-dot"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5) Story -->
+    <section id="story" class="story-section">
+      <div class="story-left">
+        <div class="eyebrow"><span class="eyebrow-dot"></span><span>About</span></div>
+        <h2 class="story-heading heading-reveal">
+          <span class="heading-line"><span class="heading-line-inner">Building products</span></span>
+          <span class="heading-line"><span class="heading-line-inner">from zero to one.</span></span>
+        </h2>
+        <p class="story-lead fade-slide-up">
+          Information and Communications Technology student at Pandit Deendayal Energy University (PDEU) focused on product management, operations, and technical strategy. Experienced in collaborating directly with founders, discovering real user pain points across 100+ clients, and coordinating cross-functional teams across engineering, design, and business.
+        </p>
+      </div>
+
+      <div class="story-right">
+        <ul class="story-principles">
+          <li class="story-principle">
+            <span class="principle-num">01</span>
+            <div>
+              <h3 class="principle-title">Customer discovery first</h3>
+              <p class="principle-text">True product conviction begins with listening. I translate user interviews and feedback from 100+ stakeholders directly into actionable PRDs, user stories, and prioritized roadmaps.</p>
+            </div>
+          </li>
+          <li class="story-principle">
+            <span class="principle-num">02</span>
+            <div>
+              <h3 class="principle-title">Cross-functional ownership</h3>
+              <p class="principle-text">Great products live at the confluence of engineering, UI/UX, and strategy. I bridge the gaps between developers, designers, and founders to streamline day-to-day execution.</p>
+            </div>
+          </li>
+          <li class="story-principle">
+            <span class="principle-num">03</span>
+            <div>
+              <h3 class="principle-title">Execute with agile urgency</h3>
+              <p class="principle-text">An unlaunched idea solves zero problems. I build MVPs, run sprint cycles, and iterate continuously on real user testing to turn concept into shipped reality.</p>
+            </div>
+          </li>
+          <li class="story-principle">
+            <span class="principle-num">04</span>
+            <div>
+              <h3 class="principle-title">Data-informed, design-driven</h3>
+              <p class="principle-text">Intuition sparks direction, but metrics like SQL funnel tracking, product KPIs, and usability cycles prove what actually moves the needle for users and the business.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 6) Ventures -->
+    <section id="ventures" class="ventures-section">
+      <div class="ventures-header">
+        <div>
+          <div class="eyebrow"><span class="eyebrow-dot"></span><span>Selected Experience</span></div>
+          <h2 class="ventures-heading heading-reveal">
+            <span class="heading-line"><span class="heading-line-inner">Work that</span></span>
+            <span class="heading-line"><span class="heading-line-inner">drives impact.</span></span>
+          </h2>
+        </div>
+        <span class="ventures-count">04 / Highlights</span>
+      </div>
+
+      <ul class="ventures-list">
+        <!-- Venture 01: LawPrix -->
+        <li class="ventures-item">
+          <article>
+            <figure class="liquid-figure venture-figure" data-filter-id="v1-liquid" data-max-scale="28" role="img">
+              <svg width="0" height="0" style="position: absolute;">
+                <filter id="v1-liquid">
+                  <feTurbulence id="v1-liquid-turb" type="fractalNoise" baseFrequency="0.009" numOctaves="2" result="noise"></feTurbulence>
+                  <feDisplacementMap id="v1-liquid-disp" in="SourceGraphic" in2="noise" scale="1"></feDisplacementMap>
+                </filter>
+              </svg>
+              <img class="liquid-media" src="assets/lawprix.png" alt="LawPrix LegalTech Platform" style="filter: url(#v1-liquid);" loading="lazy">
+              <div class="liquid-veil"></div>
+              <div class="liquid-glow"></div>
+              <div class="liquid-vignette"></div>
+            </figure>
+            <div class="venture-row">
+              <div>
+                <h3 class="venture-name">LawPrix</h3>
+                <p class="venture-blurb">Led a 3-member agile team to develop and launch an MVP for lawyer discovery, conducting research across 100+ clients and onboarding 50+ advocates.</p>
+              </div>
+              <div class="venture-meta-right">
+                <div class="venture-year">2025–2026</div>
+                <div class="venture-outcome">50+ Advocates</div>
+              </div>
+            </div>
+            <div class="venture-category">LegalTech Platform</div>
+          </article>
+        </li>
+
+        <!-- Venture 02: FloodLabs -->
+        <li class="ventures-item">
+          <article>
+            <figure class="liquid-figure venture-figure" data-filter-id="v2-liquid" data-max-scale="28" role="img">
+              <svg width="0" height="0" style="position: absolute;">
+                <filter id="v2-liquid">
+                  <feTurbulence id="v2-liquid-turb" type="fractalNoise" baseFrequency="0.009" numOctaves="2" result="noise"></feTurbulence>
+                  <feDisplacementMap id="v2-liquid-disp" in="SourceGraphic" in2="noise" scale="1"></feDisplacementMap>
+                </filter>
+              </svg>
+              <img class="liquid-media" src="assets/floodlabs.jpg" alt="FloodLabs Information Platform" style="filter: url(#v2-liquid);" loading="lazy">
+              <div class="liquid-veil"></div>
+              <div class="liquid-glow"></div>
+              <div class="liquid-vignette"></div>
+            </figure>
+            <div class="venture-row">
+              <div>
+                <h3 class="venture-name">FloodLabs</h3>
+                <p class="venture-blurb">Engineered a responsive web platform for real-time flood monitoring, conducting usability testing across multiple design iterations.</p>
+              </div>
+              <div class="venture-meta-right">
+                <div class="venture-year">2025</div>
+                <div class="venture-outcome">Web Platform</div>
+              </div>
+            </div>
+            <div class="venture-category">Climate Tech</div>
+          </article>
+        </li>
+
+        <!-- Venture 03: PDEU Innovation Center -->
+        <li class="ventures-item">
+          <article>
+            <figure class="liquid-figure venture-figure" data-filter-id="v3-liquid" data-max-scale="28" role="img">
+              <svg width="0" height="0" style="position: absolute;">
+                <filter id="v3-liquid">
+                  <feTurbulence id="v3-liquid-turb" type="fractalNoise" baseFrequency="0.009" numOctaves="2" result="noise"></feTurbulence>
+                  <feDisplacementMap id="v3-liquid-disp" in="SourceGraphic" in2="noise" scale="1"></feDisplacementMap>
+                </filter>
+              </svg>
+              <img class="liquid-media" src="assets/pdeu-iic.jpg" alt="PDEU Innovation Center" style="filter: url(#v3-liquid);" loading="lazy">
+              <div class="liquid-veil"></div>
+              <div class="liquid-glow"></div>
+              <div class="liquid-vignette"></div>
+            </figure>
+            <div class="venture-row">
+              <div>
+                <h3 class="venture-name">PDEU Innovation Center</h3>
+                <p class="venture-blurb">Designed 150+ marketing creatives, UI assets, and branding materials for 20+ startup events and incubation programs.</p>
+              </div>
+              <div class="venture-meta-right">
+                <div class="venture-year">2024–2025</div>
+                <div class="venture-outcome">150+ Assets</div>
+              </div>
+            </div>
+            <div class="venture-category">Startup Incubation</div>
+          </article>
+        </li>
+
+        <!-- Venture 04: CIBOS -->
+        <li class="ventures-item">
+          <article>
+            <figure class="liquid-figure venture-figure" data-filter-id="v4-liquid" data-max-scale="28" role="img">
+              <svg width="0" height="0" style="position: absolute;">
+                <filter id="v4-liquid">
+                  <feTurbulence id="v4-liquid-turb" type="fractalNoise" baseFrequency="0.009" numOctaves="2" result="noise"></feTurbulence>
+                  <feDisplacementMap id="v4-liquid-disp" in="SourceGraphic" in2="noise" scale="1"></feDisplacementMap>
+                </filter>
+              </svg>
+              <img class="liquid-media" src="assets/cibos.jpg" alt="CIBOS Product Operations" style="filter: url(#v4-liquid);" loading="lazy">
+              <div class="liquid-veil"></div>
+              <div class="liquid-glow"></div>
+              <div class="liquid-vignette"></div>
+            </figure>
+            <div class="venture-row">
+              <div>
+                <h3 class="venture-name">CIBOS</h3>
+                <p class="venture-blurb">Worked directly with founders on product operations, strategic initiatives, and cross-functional coordination between engineering and design.</p>
+              </div>
+              <div class="venture-meta-right">
+                <div class="venture-year">2026</div>
+                <div class="venture-outcome">Founder Office</div>
+              </div>
+            </div>
+            <div class="venture-category">Product Operations</div>
+          </article>
+        </li>
+      </ul>
+    </section>
+
+    <!-- 7) Impact -->
+    <section id="impact" class="impact-section">
+      <div class="eyebrow"><span class="eyebrow-dot"></span><span>By The Numbers</span></div>
+      <h2 class="impact-heading heading-reveal">
+        <span class="heading-line"><span class="heading-line-inner">Execution, measured.</span></span>
+      </h2>
+
+      <dl class="impact-list">
+        <div class="impact-cell">
+          <dd class="impact-figure">100+</dd>
+          <dt class="impact-label">Clients interviewed in user discovery</dt>
+        </div>
+        <div class="impact-cell">
+          <dd class="impact-figure">50+</dd>
+          <dt class="impact-label">Legal advocates onboarded on LawPrix</dt>
+        </div>
+        <div class="impact-cell">
+          <dd class="impact-figure">150+</dd>
+          <dt class="impact-label">Brand &amp; startup assets designed</dt>
+        </div>
+        <div class="impact-cell">
+          <dd class="impact-figure">8.33</dd>
+          <dt class="impact-label">Academic CGPA in ICT Engineering</dt>
+        </div>
+      </dl>
+    </section>
+
+    <!-- 8) Voices / Leadership -->
+    <section id="voices" class="voices-section">
+      <div class="eyebrow"><span class="eyebrow-dot"></span><span>Leadership</span></div>
+      <h2 class="voices-heading heading-reveal">
+        <span class="heading-line"><span class="heading-line-inner">Positions of responsibility.</span></span>
+      </h2>
+
+      <div class="voices-body-grid">
+        <!-- Selector list -->
+        <div class="voices-selector">
+          <ul>
+            <li>
+              <button class="voice-btn active" data-voice="0" aria-label="Select Science and Technical Committee role">
+                <span class="voice-num">01</span>
+                <div class="voice-info">
+                  <span class="voice-name">Science &amp; Technical Committee</span>
+                  <span class="voice-role">P.R. &amp; Marketing Head, PDEU (2023–2025)</span>
+                </div>
+                <span class="voice-line"></span>
+              </button>
+            </li>
+            <li>
+              <button class="voice-btn" data-voice="1" aria-label="Select Apogee3 Aerospace Society role">
+                <span class="voice-num">02</span>
+                <div class="voice-info">
+                  <span class="voice-name">Apogee3 Aerospace Society</span>
+                  <span class="voice-role">Publicity &amp; Social Media Head (2023–2024)</span>
+                </div>
+                <span class="voice-line"></span>
+              </button>
+            </li>
+            <li>
+              <button class="voice-btn" data-voice="2" aria-label="Select The Inspired Room role">
+                <span class="voice-num">03</span>
+                <div class="voice-info">
+                  <span class="voice-name">The Inspired Room</span>
+                  <span class="voice-role">Logistics &amp; Branding Head (2023–2024)</span>
+                </div>
+                <span class="voice-line"></span>
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Featured panel -->
+        <div class="voices-featured">
+          <div class="voices-featured-inner">
+            <blockquote class="voices-quote-wrap">
+              <p id="voice-quote" class="voices-quote-text quote-revealed"></p>
+              <footer id="voice-footer" class="voices-quote-footer"></footer>
+            </blockquote>
+
+            <div class="voices-portrait-col">
+              <div class="voice-portrait-wrap">
+                <figure class="liquid-figure voice-portrait-figure" data-filter-id="voice-liquid" data-max-scale="22" role="img">
+                  <svg width="0" height="0" style="position: absolute;">
+                    <filter id="voice-liquid">
+                      <feTurbulence id="voice-liquid-turb" type="fractalNoise" baseFrequency="0.009" numOctaves="2" result="noise"></feTurbulence>
+                      <feDisplacementMap id="voice-liquid-disp" in="SourceGraphic" in2="noise" scale="1"></feDisplacementMap>
+                    </filter>
+                  </svg>
+                  <img id="voice-portrait-img" class="liquid-media" src="assets/chirag-por-face.jpg" alt="Chirag Buliya — Positions of Responsibility" style="filter: url(#voice-liquid); object-position: center center;" loading="lazy">
+                  <div class="liquid-veil"></div>
+                  <div class="liquid-glow"></div>
+                  <div class="liquid-vignette"></div>
+                </figure>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9) ContactFooter -->
+    <footer id="contact" class="contact-footer">
+      <div class="eyebrow"><span class="eyebrow-dot"></span><span>Let's Connect</span></div>
+      <h2 class="contact-heading heading-reveal">
+        <span class="heading-line"><span class="heading-line-inner">Have a problem that</span></span>
+        <span class="heading-line"><span class="heading-line-inner">needs a product mind?</span></span>
+      </h2>
+      <p class="contact-lead fade-slide-up">
+        Whether it is product operations, strategic roadmaps, or building new ventures, I am always open to discussing impactful opportunities.
+      </p>
+
+      <a href="mailto:chiragbuliya@gmail.com" class="contact-email">
+        chiragbuliya@gmail.com<span class="email-arrow">↗</span>
+      </a>
+
+      <!-- Footer Bar -->
+      <div class="footer-bar">
+        <div class="footer-left">
+          <p class="footer-signature">Chirag Buliya</p>
+          <p class="footer-tagline">B.Tech ICT · Product Operations · UI/UX Design</p>
+        </div>
+
+        <nav class="footer-middle" aria-label="Social">
+          <ul class="social-list">
+            <li>
+              <a href="https://www.linkedin.com" target="_blank" rel="noreferrer noopener" class="social-link">
+                <span class="social-rule"></span>LinkedIn ↗
+              </a>
+            </li>
+            <li>
+              <a href="tel:+919462971898" class="social-link">
+                <span class="social-rule"></span>+91 9462971898
+              </a>
+            </li>
+            <li>
+              <a href="mailto:chiragbuliya@gmail.com" class="social-link">
+                <span class="social-rule"></span>chiragbuliya@gmail.com
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="footer-right">
+          <p class="footer-copyright">© 2026 Chirag Buliya. Mahaveer Nagar, Kota.</p>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Application Logic -->
+  <script type="module">
+    import Lenis from "lenis";
+
+    // Initialize Lenis Smooth Scroll
+    let lenis = null;
+    try {
+      lenis = new Lenis({
+        smoothWheel: true,
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+      });
+      window.lenis = lenis;
+
+      function raf(t) {
+        lenis.raf(t);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+    } catch (e) {
+      console.warn("Lenis failed to load:", e);
+    }
+
+    // Rem-based adaptive grid JS scale-up above 1920px
+    const FONT_BASE = 16, BASE_W = 1920, COEF = 0.6666;
+    function applyAdaptiveGrid() {
+      const w = window.innerWidth;
+      const reduction = ((BASE_W - w) / BASE_W) * 100 * COEF;
+      const size = FONT_BASE - (FONT_BASE * reduction) / 100;
+      if (size > FONT_BASE) document.documentElement.style.fontSize = size + "px";
+      else document.documentElement.style.removeProperty("font-size");
+    }
+    applyAdaptiveGrid();
+    window.addEventListener("resize", applyAdaptiveGrid);
+
+    // Reduced motion detection
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Hero Reveal Sequencing
+    function triggerHeroSequence() {
+      const l1Letters = document.querySelectorAll('.hero-name-l1 .letter-inner');
+      const l2Letters = document.querySelectorAll('.hero-name-l2 .letter-inner');
+      const roles = document.querySelectorAll('.role-line');
+      const desc = document.querySelector('.hero-desc');
+      const scrollCue = document.querySelector('.hero-scroll-cue');
+
+      if (prefersReduced) {
+        l1Letters.forEach(el => el.classList.add('revealed'));
+        l2Letters.forEach(el => el.classList.add('revealed'));
+        roles.forEach(el => el.classList.add('revealed'));
+        desc?.classList.add('revealed');
+        scrollCue?.classList.add('revealed');
+        return;
+      }
+
+      // Name line 1: baseline 2500ms + i * 52ms
+      l1Letters.forEach((el, i) => {
+        setTimeout(() => el.classList.add('revealed'), 2500 + i * 52);
+      });
+
+      // Name line 2: baseline 2740ms + i * 52ms
+      l2Letters.forEach((el, i) => {
+        setTimeout(() => el.classList.add('revealed'), 2740 + i * 52);
+      });
+
+      // Roles: 2700ms + i * 80ms
+      roles.forEach((el, i) => {
+        setTimeout(() => el.classList.add('revealed'), 2700 + i * 80);
+      });
+
+      // Description: 2900ms
+      setTimeout(() => desc?.classList.add('revealed'), 2900);
+
+      // Scroll Cue: 3400ms
+      setTimeout(() => scrollCue?.classList.add('revealed'), 3400);
+    }
+
+    // Preloader Execution
+    const preloader = document.getElementById('preloader');
+    const counterVal = document.getElementById('preloader-counter-val');
+    const preloaderBrand = document.querySelector('.preloader-brand');
+    const preloaderCounter = document.querySelector('.preloader-counter');
+
+    if (prefersReduced) {
+      if (preloader) preloader.style.display = 'none';
+      lenis?.start();
+      triggerHeroSequence();
+    } else {
+      lenis?.stop();
+      window.scrollTo(0, 0);
+
+      const COUNT_DURATION = 2000;
+      const countStart = performance.now();
+
+      function updateCounter(time) {
+        const elapsed = time - countStart;
+        const progress = Math.min(elapsed / COUNT_DURATION, 1);
+        const currentCount = Math.floor(progress * 100);
+
+        if (counterVal) counterVal.textContent = currentCount;
+
+        if (progress < 1) {
+          requestAnimationFrame(updateCounter);
+        } else {
+          // Counter hit 100
+          if (preloaderBrand) preloaderBrand.style.opacity = '0';
+          if (preloaderCounter) preloaderCounter.style.opacity = '0';
+
+          // 200ms delay, then wipe preloader upward
+          setTimeout(() => {
+            if (preloader) {
+              preloader.style.transform = 'translateY(-100%)';
+            }
+            // After wipe completes (~650ms)
+            setTimeout(() => {
+              if (preloader) {
+                preloader.style.pointerEvents = 'none';
+                preloader.setAttribute('aria-hidden', 'true');
+                preloader.style.visibility = 'hidden';
+              }
+              lenis?.start();
+            }, 650);
+          }, 200);
+        }
+      }
+      requestAnimationFrame(updateCounter);
+      triggerHeroSequence();
+    }
+
+    // IntersectionObserver for Scroll Entrances
+    const scrollObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0, rootMargin: '0px' });
+
+    document.querySelectorAll('.heading-reveal, .fade-slide-up, .story-principle, .ventures-item, .impact-cell, .voice-portrait-wrap').forEach(el => {
+      scrollObserver.observe(el);
+    });
+
+    // Smooth Anchor Navigation
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', (e) => {
+        const href = anchor.getAttribute('href');
+        if (!href || href === '#') return;
+        const target = document.querySelector(href);
+        if (target) {
+          e.preventDefault();
+          closeMobileMenu();
+          if (window.lenis) {
+            window.lenis.scrollTo(target, { duration: 1.2 });
+          } else {
+            target.scrollIntoView({ behavior: 'smooth' });
+          }
+        }
+      });
+    });
+
+    // Mobile Menu Controls
+    const burgerBtn = document.querySelector('.burger-btn');
+    const mobileMenu = document.querySelector('.mobile-menu');
+
+    function openMobileMenu() {
+      burgerBtn?.classList.add('open');
+      burgerBtn?.setAttribute('aria-expanded', 'true');
+      mobileMenu?.classList.add('open');
+      mobileMenu?.setAttribute('aria-hidden', 'false');
+      lenis?.stop();
+    }
+
+    function closeMobileMenu() {
+      burgerBtn?.classList.remove('open');
+      burgerBtn?.setAttribute('aria-expanded', 'false');
+      mobileMenu?.classList.remove('open');
+      mobileMenu?.setAttribute('aria-hidden', 'true');
+      lenis?.start();
+    }
+
+    burgerBtn?.addEventListener('click', () => {
+      if (burgerBtn.classList.contains('open')) {
+        closeMobileMenu();
+      } else {
+        openMobileMenu();
+      }
+    });
+
+    // Leadership / Positions of Responsibility Data & Interaction
+    const voicesData = [
+      {
+        quote: "Spearheaded digital and offline campaigns, coordinating public outreach and engagement across university-wide initiatives.",
+        name: "Science & Technical Committee",
+        role: "P.R. & Marketing Head, PDEU (2023–2025)",
+        image: "assets/chirag-por-face.jpg"
+      },
+      {
+        quote: "Directed promotional campaigns and public communications, driving high engagement and attendance for aerospace symposiums and events.",
+        name: "Apogee3 Aerospace Society",
+        role: "Publicity & Social Media Head (2023–2024)",
+        image: "assets/chirag-por-face.jpg"
+      },
+      {
+        quote: "Orchestrated end-to-end event design, branding identity, and cross-team logistics to deliver cohesive institutional experiences.",
+        name: "The Inspired Room",
+        role: "Logistics & Branding Head (2023–2024)",
+        image: "assets/chirag-por-face.jpg"
+      }
+    ];
+
+    const voiceButtons = document.querySelectorAll('.voice-btn');
+    const quoteEl = document.getElementById('voice-quote');
+    const footerEl = document.getElementById('voice-footer');
+    const portraitEl = document.getElementById('voice-portrait-img');
+
+    function setVoice(index) {
+      const v = voicesData[index];
+      if (!v) return;
+
+      // Update button state
+      voiceButtons.forEach((btn, i) => {
+        if (i === index) btn.classList.add('active');
+        else btn.classList.remove('active');
+      });
+
+      // Update footer
+      if (footerEl) footerEl.textContent = `${v.name} — ${v.role}`;
+
+      // Update portrait image
+      if (portraitEl) {
+        portraitEl.src = v.image;
+        portraitEl.alt = v.name;
+      }
+
+      // Word-by-word reveal replay
+      if (quoteEl) {
+        quoteEl.classList.remove('quote-revealed');
+        const words = v.quote.split(/\s+/);
+        const spans = words.map((w, i) => {
+          const isFirst = i === 0;
+          const isLast = i === words.length - 1;
+          const displayWord = (isFirst ? '“' : '') + w + (isLast ? '”' : '');
+          return `<span class="word-mask"><span class="word-inner" style="transition-delay: ${i * 22}ms;">${displayWord}</span></span>`;
+        }).join(' ');
+
+        quoteEl.innerHTML = spans;
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            quoteEl.classList.add('quote-revealed');
+          });
+        });
+      }
+    }
+
+    voiceButtons.forEach((btn, idx) => {
+      btn.addEventListener('click', () => setVoice(idx));
+      btn.addEventListener('mouseenter', () => setVoice(idx));
+      btn.addEventListener('focus', () => setVoice(idx));
+    });
+
+    // Render initial voice
+    setVoice(0);
+
+    // LiquidImage Spring Simulation (imperative filter animation on desktop)
+    function initLiquidImages() {
+      const isTouch = window.matchMedia('(hover: none) or (max-width: 768px)').matches;
+      if (isTouch) return;
+
+      document.querySelectorAll('.liquid-figure').forEach((fig) => {
+        const filterId = fig.dataset.filterId;
+        const turb = document.getElementById(filterId + '-turb');
+        const disp = document.getElementById(filterId + '-disp');
+        if (!turb || !disp) return;
+
+        const maxScale = parseFloat(fig.dataset.maxScale || '28');
+        const minScale = 1;
+        const minFreq = 0.009;
+        const maxFreq = 0.022;
+
+        let target = 0;
+        let current = 0;
+        let velocity = 0;
+        let animId = null;
+
+        // Spring tension 140 / friction 13
+        const tension = 140;
+        const friction = 13;
+        let lastTime = null;
+
+        function step(time) {
+          if (!lastTime) lastTime = time;
+          const dt = Math.min((time - lastTime) / 1000, 0.033);
+          lastTime = time;
+
+          const force = -tension * (current - target) - friction * velocity;
+          velocity += force * dt;
+          current += velocity * dt;
+
+          const scaleVal = Math.max(0, minScale + (maxScale - minScale) * current);
+          const freqVal = Math.max(0.001, minFreq + (maxFreq - minFreq) * current);
+
+          disp.setAttribute('scale', scaleVal.toFixed(2));
+          turb.setAttribute('baseFrequency', freqVal.toFixed(4));
+
+          if (Math.abs(current - target) > 0.0005 && Math.abs(velocity) > 0.0005) {
+            animId = requestAnimationFrame(step);
+          } else {
+            current = target;
+            velocity = 0;
+            const finalScale = minScale + (maxScale - minScale) * current;
+            const finalFreq = minFreq + (maxFreq - minFreq) * current;
+            disp.setAttribute('scale', finalScale.toFixed(2));
+            turb.setAttribute('baseFrequency', finalFreq.toFixed(4));
+            animId = null;
+            lastTime = null;
+          }
+        }
+
+        function startAnim() {
+          if (!animId) {
+            lastTime = performance.now();
+            animId = requestAnimationFrame(step);
+          }
+        }
+
+        fig.addEventListener('mouseenter', () => {
+          target = 1;
+          startAnim();
+        });
+
+        fig.addEventListener('mouseleave', () => {
+          target = 0;
+          startAnim();
+        });
+      });
+    }
+
+    initLiquidImages();
+  </script>
+</body>
+</html>
